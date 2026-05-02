@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LinearAPI = void 0;
 const LINEAR_API = "https://api.linear.app/graphql";
-class LinearAPI {
+export class LinearAPI {
     token;
     constructor(token) {
         this.token = token;
@@ -89,5 +86,4 @@ class LinearAPI {
         return data.workflowStates.nodes;
     }
 }
-exports.LinearAPI = LinearAPI;
 //# sourceMappingURL=linear.js.map

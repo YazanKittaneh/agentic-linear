@@ -1,23 +1,23 @@
 #!/usr/bin/env node
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = require("commander");
-const init_js_1 = require("./commands/init.js");
-const serve_js_1 = require("./commands/serve.js");
-const status_js_1 = require("./commands/status.js");
-const stop_js_1 = require("./commands/stop.js");
-const restart_js_1 = require("./commands/restart.js");
-const logs_js_1 = require("./commands/logs.js");
-const program = new commander_1.Command();
+import { Command } from "commander";
+import { initCommand } from "./commands/init.js";
+import { serveCommand } from "./commands/serve.js";
+import { statusCommand } from "./commands/status.js";
+import { stopCommand } from "./commands/stop.js";
+import { restartCommand } from "./commands/restart.js";
+import { logsCommand } from "./commands/logs.js";
+import { updateCommand } from "./commands/update.js";
+const program = new Command();
 program
     .name("agentic-linear")
     .description("Connect Linear tickets to AI agents")
     .version("0.1.0");
-program.addCommand(init_js_1.initCommand);
-program.addCommand(serve_js_1.serveCommand);
-program.addCommand(status_js_1.statusCommand);
-program.addCommand(stop_js_1.stopCommand);
-program.addCommand(restart_js_1.restartCommand);
-program.addCommand(logs_js_1.logsCommand);
+program.addCommand(initCommand);
+program.addCommand(serveCommand);
+program.addCommand(statusCommand);
+program.addCommand(stopCommand);
+program.addCommand(restartCommand);
+program.addCommand(logsCommand);
+program.addCommand(updateCommand);
 program.parse();
 //# sourceMappingURL=cli.js.map

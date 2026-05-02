@@ -2,6 +2,7 @@
   "name": "agentic-linear",
   "version": "0.1.0",
   "description": "Reusable service that connects Linear tickets to AI agents that implement fixes and features",
+  "type": "module",
   "main": "dist/cli.js",
   "bin": {
     "agentic-linear": "dist/cli.js"

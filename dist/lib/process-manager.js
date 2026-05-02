@@ -1,18 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProcessManager = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const os_1 = __importDefault(require("os"));
-const PID_FILE = path_1.default.join(os_1.default.homedir(), ".agentic-linear", "pids.json");
-class ProcessManager {
+import fs from "fs";
+import path from "path";
+import os from "os";
+const PID_FILE = path.join(os.homedir(), ".agentic-linear", "pids.json");
+export class ProcessManager {
     static read() {
         try {
-            if (fs_1.default.existsSync(PID_FILE)) {
-                return JSON.parse(fs_1.default.readFileSync(PID_FILE, "utf-8"));
+            if (fs.existsSync(PID_FILE)) {
+                return JSON.parse(fs.readFileSync(PID_FILE, "utf-8"));
             }
         }
         catch {
@@ -21,15 +15,15 @@ class ProcessManager {
         return null;
     }
     static write(info) {
-        const dir = path_1.default.dirname(PID_FILE);
-        if (!fs_1.default.existsSync(dir)) {
-            fs_1.default.mkdirSync(dir, { recursive: true });
+        const dir = path.dirname(PID_FILE);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
         }
-        fs_1.default.writeFileSync(PID_FILE, JSON.stringify(info, null, 2));
+        fs.writeFileSync(PID_FILE, JSON.stringify(info, null, 2));
     }
     static clear() {
-        if (fs_1.default.existsSync(PID_FILE)) {
-            fs_1.default.unlinkSync(PID_FILE);
+        if (fs.existsSync(PID_FILE)) {
+            fs.unlinkSync(PID_FILE);
         }
     }
     static isRunning(pid) {
@@ -42,5 +36,4 @@ class ProcessManager {
         }
     }
 }
-exports.ProcessManager = ProcessManager;
 //# sourceMappingURL=process-manager.js.map

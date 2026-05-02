@@ -1,13 +1,7 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.spawnOpencodeAgent = spawnOpencodeAgent;
-const child_process_1 = require("child_process");
-const chalk_1 = __importDefault(require("chalk"));
-const linear_js_1 = require("./linear.js");
-function spawnOpencodeAgent(context) {
+import { spawn } from "child_process";
+import chalk from "chalk";
+import { LinearAPI } from "./linear.js";
+export function spawnOpencodeAgent(context) {
     const { issueId, identifier, title, description, projectPath, repoUrl, branchPrefix, linearToken, } = context;
     const branchName = `${branchPrefix}${identifier.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
     const promptContent = buildAgentPrompt({
@@ -19,8 +13,8 @@ function spawnOpencodeAgent(context) {
         issueId,
         linearToken,
     });
-    console.log(chalk_1.default.blue(`🚀 Spawning opencode agent for ${identifier} in ${projectPath}`));
-    const opencodeProcess = (0, child_process_1.spawn)("opencode", ["run", "--dangerously-skip-permissions", promptContent], {
+    console.log(chalk.blue(`🚀 Spawning opencode agent for ${identifier} in ${projectPath}`));
+    const opencodeProcess = spawn("opencode", ["run", "--dangerously-skip-permissions", promptContent], {
         cwd: projectPath,
         stdio: ["pipe", "pipe", "pipe"],
         detached: true,
@@ -33,25 +27,25 @@ function spawnOpencodeAgent(context) {
     });
     opencodeProcess.stdin?.write("\n");
     opencodeProcess.stdin?.end();
-    const linear = new linear_js_1.LinearAPI(linearToken);
+    const linear = new LinearAPI(linearToken);
     let outputBuffer = "";
     opencodeProcess.stdout?.on("data", (data) => {
         const text = data.toString();
         outputBuffer += text;
-        console.log(chalk_1.default.gray(`[${identifier}] ${text.trim()}`));
+        console.log(chalk.gray(`[${identifier}] ${text.trim()}`));
     });
     opencodeProcess.stderr?.on("data", (data) => {
         const text = data.toString();
         outputBuffer += text;
-        console.error(chalk_1.default.red(`[${identifier}] ${text.trim()}`));
+        console.error(chalk.red(`[${identifier}] ${text.trim()}`));
     });
     opencodeProcess.on("close", async (code) => {
         if (code === 0) {
-            console.log(chalk_1.default.green(`✅ Agent completed for ${identifier}`));
+            console.log(chalk.green(`✅ Agent completed for ${identifier}`));
             await linear.addComment(issueId, `✅ Agentic pipeline completed. PR has been opened with the implementation.`, linearToken);
         }
         else {
-            console.log(chalk_1.default.red(`❌ Agent failed for ${identifier} (exit code ${code})`));
+            console.log(chalk.red(`❌ Agent failed for ${identifier} (exit code ${code})`));
             const truncatedLog = truncateLog(outputBuffer, 3000);
             await linear.addComment(issueId, `❌ Agentic pipeline failed (exit code ${code}).\n\n**Log output:**\n\n\`\`\`\n${truncatedLog}\n\`\`\`\n\n*If the log is truncated, check the server logs for full details.*`, linearToken);
         }
