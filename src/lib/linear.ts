@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 const LINEAR_API = "https://api.linear.app/graphql";
 
 export class LinearAPI {
