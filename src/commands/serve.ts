@@ -12,12 +12,6 @@ export const serveCommand = new Command("serve")
   .option("-t, --token <token>", "Linear API token (or set LINEAR_TOKEN env)")
   .action(async (options) => {
     const port = parseInt(options.port, 10);
-    const linearToken = options.token || process.env.LINEAR_TOKEN;
-
-    if (!linearToken) {
-      console.log(chalk.red("❌ Linear token required. Use --token or set LINEAR_TOKEN env var."));
-      process.exit(1);
-    }
 
     const existing = ProcessManager.read();
     if (existing?.serverPid && ProcessManager.isRunning(existing.serverPid)) {
@@ -30,7 +24,6 @@ export const serveCommand = new Command("serve")
     app.use(express.json());
 
     const registry = new Registry();
-    const linear = new LinearAPI(linearToken);
 
     app.post("/webhook/linear", async (req, res) => {
       try {
@@ -55,10 +48,10 @@ export const serveCommand = new Command("serve")
         if (type === "Issue" && (body.action === "create" || body.action === "update")) {
           console.log(chalk.blue(`🤖 Received Linear issue ${data.identifier}: ${data.title}`));
 
+          const linear = new LinearAPI(project.linearToken);
           await linear.addComment(
             data.id,
-            `🤖 Agentic pipeline triggered. Spawning opencode agent to work on this issue...`,
-            project.linearToken
+            `🤖 Agentic pipeline triggered. Spawning opencode agent to work on this issue...`
           );
 
           spawnOpencodeAgent({
