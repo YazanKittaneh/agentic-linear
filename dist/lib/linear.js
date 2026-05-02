@@ -33,8 +33,8 @@ class LinearAPI {
     }
     async getProjects(teamId) {
         const data = (await this.query(`
-      query($teamId: String!) {
-        projects(filter: { team: { id: { eq: $teamId } } }) {
+      query($teamId: ID!) {
+        projects(filter: { accessibleTeams: { id: { eq: $teamId } } }) {
           nodes { id name }
         }
       }
@@ -80,7 +80,7 @@ class LinearAPI {
     }
     async getIssueStates(teamId) {
         const data = (await this.query(`
-      query($teamId: String!) {
+      query($teamId: ID!) {
         workflowStates(filter: { team: { id: { eq: $teamId } } }) {
           nodes { id name type }
         }
